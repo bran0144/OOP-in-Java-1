@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 public class Account {
     private boolean isVerified;
     private boolean isClosed;
+    private BigDecimal balance;
 
     public void holderVerified() {
         this.isVerified = true;
@@ -14,6 +15,7 @@ public class Account {
     public void deposit(BigDecimal amount) {
         if(this.isClosed)
             return;
+        this.balance = this.balance.add(amount);
 
     }
     public void withdraw(BigDecimal amount) {
@@ -21,5 +23,6 @@ public class Account {
             return;
         if (this.isClosed)
             return;
+        this.balance = this.balance.subtract(amount);
     }
 }
