@@ -28,7 +28,6 @@ public class Account {
             return;
         if (!this.isVerified)
             return;
-        this.isFrozen = true;
         this.ensureUnfrozen = this::unfreeze;
     }
 
@@ -47,15 +46,8 @@ public class Account {
         this.ensureUnfrozen.execute();
         this.balance = this.balance.subtract(amount);
     }
-    private void ensureUnfrozen() {
-        if (this.isFrozen) {
-            this.unfreeze();
-        } else {
-            this.stayUnfrozen();
-        }
-    }
+
     private void unfreeze() {
-        this.isFrozen = false;
         this.onUnfrozen.handle();
         this.ensureUnfrozen = this::stayUnfrozen;
     }
