@@ -1,6 +1,10 @@
-package accountstates;
+package com.target.ooppractice.accountstates;
+
+import com.target.ooppractice.AccountUnfrozen;
+import com.target.ooppractice.AccountState;
 
 import java.math.BigDecimal;
+import java.util.function.Consumer;
 
 public class Active implements AccountState {
     private AccountUnfrozen onUnfrozen;

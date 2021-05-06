@@ -1,33 +1,30 @@
-package accountstates;
+package com.target.ooppractice.accountstates;
 
+import com.target.ooppractice.AccountState;
+import com.target.ooppractice.AccountUnfrozen;
+import com.target.ooppractice.accountstates.Active;
+import com.target.ooppractice.accountstates.Closed;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
 
-public class Frozen implements AccountState {
+public class NotVerified implements AccountState {
     private AccountUnfrozen onUnfrozen;
 
-    public Frozen(AccountUnfrozen onUnfrozen) {
+    public NotVerified(AccountUnfrozen onUnfrozen) {
         this.onUnfrozen = onUnfrozen;
     }
 
     @Override
     public AccountState deposit(BigDecimal amount, Consumer<BigDecimal> addToBalance){
         addToBalance.accept(amount);
-        return this.unfreeze();
-
+        return this;
     }
     @Override
     public AccountState withdraw(BigDecimal balance, BigDecimal amount, Consumer<BigDecimal> subtractFromBalance){
-        if (balance.compareTo(amount) >= 0) {
-            subtractFromBalance.accept(amount);
-        }
-        return this.unfreeze();
+        return this;
     }
-    private AccountState unfreeze() {
-        this.onUnfrozen.handle();
-        return new Active(this.onUnfrozen);
-    }
+
     @Override
     public AccountState freezeAccount() {
         return this;
@@ -35,7 +32,7 @@ public class Frozen implements AccountState {
 
     @Override
     public AccountState holderVerified() {
-        return this;
+        return new Active(this.onUnfrozen);
     }
     @Override
     public AccountState closeAccount() {

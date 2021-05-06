@@ -1,4 +1,7 @@
+package com.target.ooppractice;
+
 import java.math.BigDecimal;
+import java.util.function.Consumer;
 
 public interface AccountState {
     AccountState deposit(BigDecimal amount, Consumer<BigDecimal> addToBalance);

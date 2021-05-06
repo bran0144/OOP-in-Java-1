@@ -1,5 +1,6 @@
-import accountstates.Active;
-import accountstates.Frozen;
+package com.target.ooppractice;
+
+import com.target.ooppractice.accountstates.Active;
 
 import java.math.BigDecimal;
 
