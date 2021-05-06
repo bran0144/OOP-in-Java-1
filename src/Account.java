@@ -1,56 +1,39 @@
+import accountstates.Active;
+import accountstates.Frozen;
+
 import java.math.BigDecimal;
 
 public class Account {
-    private boolean isVerified;
-    private boolean isClosed;
-    private boolean isFrozen;
     private BigDecimal balance;
-
-    private EnsureUnfrozen ensureUnfrozen;
-    private AccountUnfrozen onUnfrozen;
+    private AccountState state;
 
     public Account(AccountUnfrozen onUnfrozen) {
         this.balance = BigDecimal.ZERO;
-        this.ensureUnfrozen = this::stayUnfrozen;
-        this.onUnfrozen = onUnfrozen;
+        this.state = new Active(onUnfrozen);
     }
 
     public void holderVerified() {
-        this.isVerified = true;
+        this.state= this.state.holderVerified();
     }
 
     public void closeAccount() {
-        this.isClosed = true;
+        this.state = this.state.closeAccount();
     }
 
     public void freezeAccount() {
-        if (this.isClosed)
-            return;
-        if (!this.isVerified)
-            return;
-        this.ensureUnfrozen = this::unfreeze;
+        this.state = this.state.freezeAccount();
     }
 
     public void deposit(BigDecimal amount) {
-        if(this.isClosed)
-            return;
-        this.ensureUnfrozen.execute();
+        this.state = this.state.deposit(amount, this::addToBalance);
+    }
+    private void addToBalance(BigDecimal amount) {
         this.balance = this.balance.add(amount);
-
     }
     public void withdraw(BigDecimal amount) {
-        if (!this.isVerified)
-            return;
-        if (this.isClosed)
-            return;
-        this.ensureUnfrozen.execute();
+        this.state = this.state.withdraw(this.balance, amount, this::subtractFromBalance);
+    }
+    private void subtractFromBalance(BigDecimal amount) {
         this.balance = this.balance.subtract(amount);
-    }
-
-    private void unfreeze() {
-        this.onUnfrozen.handle();
-        this.ensureUnfrozen = this::stayUnfrozen;
-    }
-    private void stayUnfrozen(){
     }
 }
